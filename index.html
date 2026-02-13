@@ -59,6 +59,44 @@ body::after {
   transition: opacity 0.3s;
 }
 
+/* ---- EPIGRAPH ---- */
+.epigraph-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10vh 6vw;
+  background: var(--ink);
+  position: relative;
+}
+
+.epigraph {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.65;
+  color: var(--paper);
+  max-width: 42ch;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(24px);
+  position: relative;
+}
+
+.epigraph::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+  margin: 0 auto 2.5rem;
+}
+
+.epigraph p {
+  margin: 0;
+}
+
 /* ---- HERO ---- */
 .hero {
   min-height: 100vh;
@@ -384,6 +422,13 @@ body::after {
 <canvas class="crack-canvas" id="crack-canvas"></canvas>
 <canvas class="dust-canvas" id="dust-canvas"></canvas>
 <div class="entropy-overlay" id="entropy-overlay"></div>
+
+<!-- EPIGRAPH -->
+<section class="epigraph-section" data-section="epigraph">
+  <blockquote class="epigraph" data-fade-in>
+    <p>The world as we know it is ending, but the world itself is not. The organizational forms of the 20th century&thinsp;&mdash;&thinsp;optimized for a world of high transaction costs, information asymmetry, and human-speed coordination&thinsp;&mdash;&thinsp;are dissolving into something we can barely comprehend, let alone name. We are not witnessing the future of the company. We are witnessing the future of what comes after it. And the sooner we begin to grapple with that question honestly, with clear eyes and open hearts, the better prepared we&rsquo;ll be for what&rsquo;s already arriving.</p>
+  </blockquote>
+</section>
 
 <!-- HERO -->
 <header class="hero" data-section="hero">
