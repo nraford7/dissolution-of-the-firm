@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Dissolution of the Firm</title>
+<meta name="description" content="AI agents are not optimizing the corporation. They are dissolving the rationale for its existence." />
+<meta property="og:title" content="The Dissolution of the Firm" />
+<meta property="og:description" content="AI agents are not optimizing the corporation. They are dissolving the rationale for its existence." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #1a1a1a;
+  --paper: #f5f0e8;
+  --paper-deep: #ede4d6;
+  --accent: #c45a2d;
+  --accent-glow: rgba(196, 90, 45, 0.15);
+  --muted: #8a8078;
+  --font-display: 'Cormorant Garamond', 'Palatino', 'Georgia', serif;
+  --font-body: 'Outfit', 'Helvetica Neue', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* Global entropy variable — set by JS */
+.entropy-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(ellipse at 50% 50%, transparent 0%, rgba(26,26,26,0.02) 100%);
+  transition: opacity 0.3s;
+}
+
+/* ---- HERO ---- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10vh 6vw;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 8vw, 7.5rem);
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  max-width: 14ch;
+}
+
+.hero-title .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.hero-sub {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 48ch;
+  line-height: 1.6;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.hero-line {
+  width: 1px;
+  height: 0;
+  background: var(--accent);
+  margin-top: 4rem;
+  opacity: 0;
+}
+
+/* ---- SECTIONS ---- */
+.essay-section {
+  padding: 12vh 6vw;
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.essay-section.wide {
+  max-width: 1000px;
+}
+
+.section-label {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--accent);
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.8rem);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: 2.5rem;
+  letter-spacing: -0.01em;
+}
+
+.section-heading .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.essay-body {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: #3a3630;
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.essay-body em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.essay-body strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ---- PULLQUOTE ---- */
+.pullquote-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10vh 6vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.pullquote-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform-origin: center;
+}
+
+.pullquote {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--paper);
+  text-align: center;
+  max-width: 18ch;
+  position: relative;
+  z-index: 2;
+}
+
+.pullquote .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* ---- DISSOLVE CARDS ---- */
+.dissolve-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin: 3rem 0;
+}
+
+.dissolve-card {
+  background: rgba(26,26,26,0.04);
+  border: 1px solid rgba(26,26,26,0.08);
+  padding: 2.5rem 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.dissolve-card-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.dissolve-card-text {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* ---- QUESTION PAIR ---- */
+.question-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin: 4rem 0;
+}
+
+.question-block {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.question-label {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.question-label.right {
+  color: var(--accent);
+}
+
+.question-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  font-weight: 400;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+/* ---- CLOSING ---- */
+.closing-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10vh 6vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.closing-quote {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  font-weight: 400;
+  line-height: 1.15;
+  max-width: 20ch;
+  margin-bottom: 3rem;
+}
+
+.closing-quote .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.closing-coda {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ---- LETTER-LEVEL DISSOLUTION ---- */
+.char {
+  display: inline-block;
+  transition: none;
+  will-change: transform, opacity, filter;
+}
+
+.char.space {
+  width: 0.3em;
+}
+
+/* ---- CRACK LINES ---- */
+.crack-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+/* ---- PARTICLE DUST ---- */
+.dust-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9996;
+}
+
+/* ---- DIVIDER ---- */
+.section-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--accent);
+  margin: 0 auto;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 768px) {
+  .dissolve-cards { grid-template-columns: 1fr; }
+  .question-pair { grid-template-columns: 1fr; gap: 2rem; }
+  .essay-section { padding: 8vh 5vw; }
+}
+
+/* ---- AUTHOR ---- */
+.author-line {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2rem;
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>
+</head>
+<body>
+
+<canvas class="crack-canvas" id="crack-canvas"></canvas>
+<canvas class="dust-canvas" id="dust-canvas"></canvas>
+<div class="entropy-overlay" id="entropy-overlay"></div>
+
+<!-- HERO -->
+<header class="hero" data-section="hero">
+  <div class="hero-eyebrow" data-fade-in>The Great Transition</div>
+  <h1 class="hero-title" data-split-words>The Dissolution of the Firm</h1>
+  <p class="hero-sub" data-fade-in>AI agents are not optimizing the corporation. They are dissolving the rationale for its existence.</p>
+  <div class="hero-line" data-fade-in></div>
+</header>
+
+<!-- SECTION 1: Coase -->
+<section class="essay-section" data-section="coase" data-dissolve="0.05">
+  <div class="section-label" data-fade-in>Ronald Coase, 1937</div>
+  <h2 class="section-heading" data-split-words>What is a company for?</h2>
+  <p class="essay-body" data-fade-in>
+    In 1937, the economist Ronald Coase answered this in <em>"The Nature of the Firm"</em>: companies exist because coordinating labor under one roof is cheaper than doing it through the open market. The corporation was an optimization engine&thinsp;&mdash;&thinsp;a way to aggregate and transform value through a series of steps and deliver it to a customer willing to pay.
+  </p>
+  <p class="essay-body" data-fade-in>
+    <strong>That's it. That's the point.</strong> Not compliance. Not risk management. Not audit or reporting or security or maintenance. Those are the overhead of the form, not its purpose.
+  </p>
+</section>
+
+<div class="section-divider" data-fade-in></div>
+
+<!-- SECTION 2: Tainter / Overhead -->
+<section class="essay-section wide" data-section="overhead" data-dissolve="0.15">
+  <div class="section-label" data-fade-in>The Overhead</div>
+  <h2 class="section-heading" data-split-words>Complexity consumes its own value</h2>
+  <p class="essay-body" data-fade-in>
+    As Joseph Tainter elaborated in <em>The Collapse of Complex Societies</em>, complex systems generate layer upon layer of administrative infrastructure to manage problems created by earlier layers, until the cost of complexity itself outweighs the benefits.
+  </p>
+  <div class="dissolve-cards">
+    <div class="dissolve-card" data-fade-in data-dissolve="0.2">
+      <div class="dissolve-card-title">Compliance</div>
+      <div class="dissolve-card-text">Necessary feature of 20th century bureaucracies, not the reason companies exist.</div>
+    </div>
+    <div class="dissolve-card" data-fade-in data-dissolve="0.25">
+      <div class="dissolve-card-title">Risk & Audit</div>
+      <div class="dissolve-card-text">Organizational scar tissue accumulated as firms scaled and regulators multiplied.</div>
+    </div>
+    <div class="dissolve-card" data-fade-in data-dissolve="0.3">
+      <div class="dissolve-card-title">Maintenance</div>
+      <div class="dissolve-card-text">Layer upon layer of infrastructure managing problems created by earlier layers.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PULLQUOTE: Scaffolding -->
+<section class="pullquote-section" data-section="scaffolding" data-dissolve="0.35">
+  <div class="pullquote-bg"></div>
+  <p class="pullquote" data-split-words>We have confused the scaffolding for the building. And now the scaffolding is being eaten.</p>
+</section>
+
+<!-- SECTION 3: The Dissolution -->
+<section class="essay-section" data-section="dissolution" data-dissolve="0.45">
+  <div class="section-label" data-fade-in>Not Efficiency. Dissolution.</div>
+  <h2 class="section-heading" data-split-words>Why do you need the organization?</h2>
+  <p class="essay-body" data-fade-in>
+    If agents can aggregate and transform value for a customer without the overhead of a compliance team, without enterprise software, without organizational maintenance&thinsp;&mdash;&thinsp;why do you need the organization?
+  </p>
+  <p class="essay-body" data-fade-in>
+    Why do you care about SaaS? Why do you care about compliance? For a growing number of value chains, the honest answer is: <strong>you don't</strong>.
+  </p>
+  <p class="essay-body" data-fade-in>
+    Coase's logic runs in reverse: if transaction costs approach zero, the firm has no reason to exist in its current form. And I don't know what replaces it.
+  </p>
+</section>
+
+<div class="section-divider" data-fade-in></div>
+
+<!-- SECTION 4: What Comes After -->
+<section class="essay-section wide" data-section="after" data-dissolve="0.6">
+  <div class="section-label" data-fade-in>What Comes After</div>
+  <h2 class="section-heading" data-split-words>The foundation of something other</h2>
+  <p class="essay-body" data-fade-in>
+    The agentic infrastructure, the autonomous coordination layers&thinsp;&mdash;&thinsp;these are not tools for making better companies. They are the foundation of something <em>other</em> than the corporation as we know it.
+  </p>
+  <div class="question-pair">
+    <div class="question-block" data-fade-in>
+      <div class="question-label">The Wrong Question</div>
+      <div class="question-text">"How do we make organizations more efficient with AI?"</div>
+    </div>
+    <div class="question-block" data-fade-in>
+      <div class="question-label right">The Right Question</div>
+      <div class="question-text">"Does the firm, as we've known it for a century, survive at all?"</div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="closing-section" data-section="close" data-dissolve="0.8">
+  <p class="closing-quote" data-split-words>The question isn't how to optimize the firm. The question is whether the firm survives at all.</p>
+  <p class="closing-coda" data-fade-in>And that is the thread I want to pull on.</p>
+  <div class="author-line" data-fade-in>Noah Raford</div>
+</section>
+
+<div style="height: 30vh;"></div>
+
+<script>
+// ================================================
+// DISSOLUTION ENGINE
+// ================================================
+
+const DOM = {
+  crackCanvas: document.getElementById('crack-canvas'),
+  dustCanvas: document.getElementById('dust-canvas'),
+  entropyOverlay: document.getElementById('entropy-overlay'),
+};
+
+const crackCtx = DOM.crackCanvas.getContext('2d');
+const dustCtx = DOM.dustCanvas.getContext('2d');
+
+let scrollY = 0;
+let maxScroll = 1;
+let globalEntropy = 0; // 0 = pristine, 1 = fully dissolved
+let ticking = false;
+let particles = [];
+let cracks = [];
+let hasSplitChars = false;
+
+// ---- RESIZE ----
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  DOM.crackCanvas.width = window.innerWidth * dpr;
+  DOM.crackCanvas.height = window.innerHeight * dpr;
+  DOM.dustCanvas.width = window.innerWidth * dpr;
+  DOM.dustCanvas.height = window.innerHeight * dpr;
+  crackCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  dustCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  DOM.crackCanvas.style.width = window.innerWidth + 'px';
+  DOM.crackCanvas.style.height = window.innerHeight + 'px';
+  DOM.dustCanvas.style.width = window.innerWidth + 'px';
+  DOM.dustCanvas.style.height = window.innerHeight + 'px';
+}
+
+// ---- SPLIT TEXT INTO WORDS/CHARS ----
+function splitWords() {
+  document.querySelectorAll('[data-split-words]').forEach(el => {
+    if (el.dataset.splitDone) return;
+    const text = el.textContent.trim();
+    el.innerHTML = '';
+    const words = text.split(/\s+/);
+    words.forEach((word, wi) => {
+      const wordSpan = document.createElement('span');
+      wordSpan.className = 'word';
+      wordSpan.style.setProperty('--wi', wi);
+      for (let i = 0; i < word.length; i++) {
+        const charSpan = document.createElement('span');
+        charSpan.className = 'char';
+        charSpan.textContent = word[i];
+        charSpan.dataset.seed = Math.random();
+        charSpan.dataset.seedX = (Math.random() - 0.5) * 2;
+        charSpan.dataset.seedY = (Math.random() - 0.5) * 2;
+        charSpan.dataset.seedR = (Math.random() - 0.5) * 2;
+        wordSpan.appendChild(charSpan);
+      }
+      el.appendChild(wordSpan);
+      if (wi < words.length - 1) {
+        const space = document.createElement('span');
+        space.className = 'char space';
+        space.innerHTML = '&nbsp;';
+        el.appendChild(space);
+      }
+    });
+    el.dataset.splitDone = '1';
+  });
+}
+
+// ---- INTERSECTION OBSERVER FOR FADE-IN ----
+function setupFadeIn() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const delay = parseFloat(el.dataset.fadeDelay) || 0;
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        }, delay);
+
+        // For word-split elements, stagger words
+        if (el.hasAttribute('data-split-words')) {
+          const words = el.querySelectorAll('.word');
+          words.forEach((w, i) => {
+            setTimeout(() => {
+              w.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+              w.style.opacity = '1';
+              w.style.transform = 'translateY(0)';
+            }, 80 * i);
+          });
+        }
+
+        // Hero line special animation
+        if (el.classList.contains('hero-line')) {
+          setTimeout(() => {
+            el.style.transition = 'opacity 1s ease, height 1.5s ease';
+            el.style.opacity = '0.5';
+            el.style.height = '80px';
+          }, 200);
+        }
+
+        // Divider
+        if (el.classList.contains('section-divider')) {
+          setTimeout(() => {
+            el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            el.style.opacity = '1';
+            el.style.transform = 'scaleX(1)';
+          }, 100);
+        }
+
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('[data-fade-in], [data-split-words]').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+// ---- SCROLL → ENTROPY ----
+function onScroll() {
+  scrollY = window.pageYOffset || document.documentElement.scrollTop;
+  maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  globalEntropy = Math.min(1, Math.max(0, scrollY / maxScroll));
+
+  if (!ticking) {
+    requestAnimationFrame(applyEntropy);
+    ticking = true;
+  }
+}
+
+// ---- APPLY ENTROPY TO CHARACTERS ----
+function applyEntropy() {
+  ticking = false;
+
+  const vh = window.innerHeight;
+  const scrollCenter = scrollY + vh * 0.5;
+
+  // Per-section dissolution
+  document.querySelectorAll('[data-dissolve]').forEach(section => {
+    const rect = section.getBoundingClientRect();
+    const sectionTop = rect.top + scrollY;
+    const sectionBottom = sectionTop + rect.height;
+
+    // How far past the section center we've scrolled (0 = just arrived, 1 = well past)
+    const sectionCenter = sectionTop + rect.height * 0.4;
+    const pastFactor = Math.min(1, Math.max(0, (scrollCenter - sectionCenter) / (vh * 1.2)));
+
+    // Only start dissolving once we've scrolled well past
+    const dissolveStart = parseFloat(section.dataset.dissolve) || 0;
+    const localEntropy = Math.min(1, Math.max(0, (globalEntropy - dissolveStart) / (1 - dissolveStart)));
+    const combinedEntropy = Math.min(1, pastFactor * 0.3 + localEntropy * 0.7);
+
+    // Apply to characters within this section
+    section.querySelectorAll('.char:not(.space)').forEach(ch => {
+      const seedX = parseFloat(ch.dataset.seedX);
+      const seedY = parseFloat(ch.dataset.seedY);
+      const seedR = parseFloat(ch.dataset.seedR);
+      const seed = parseFloat(ch.dataset.seed);
+
+      // Ease in the dissolution — starts subtle, accelerates
+      const ease = combinedEntropy * combinedEntropy * combinedEntropy;
+      const drift = ease * 120;
+      const rotate = ease * 45 * seedR;
+      const blur = ease * 4;
+      const fadeOut = Math.max(0, 1 - ease * 1.5 * (0.5 + seed * 0.5));
+
+      if (ease > 0.01) {
+        ch.style.transform = `translate(${seedX * drift}px, ${seedY * drift}px) rotate(${rotate}deg)`;
+        ch.style.opacity = fadeOut;
+        ch.style.filter = blur > 0.2 ? `blur(${blur}px)` : '';
+      } else {
+        ch.style.transform = '';
+        ch.style.opacity = '';
+        ch.style.filter = '';
+      }
+    });
+
+    // Dissolve cards — crack borders, drift apart
+    section.querySelectorAll('.dissolve-card').forEach((card, i) => {
+      const cardEntropy = Math.min(1, Math.max(0, (globalEntropy - (dissolveStart + i * 0.03)) * 2.5));
+      const ease = cardEntropy * cardEntropy;
+      const angles = [-2, 1.5, -1];
+      card.style.transform = ease > 0.01
+        ? `rotate(${angles[i % 3] * ease * 3}deg) translate(${(i - 1) * ease * 30}px, ${ease * 15}px)`
+        : '';
+      card.style.borderColor = `rgba(26,26,26,${0.08 + ease * 0.15})`;
+    });
+  });
+
+  // Pullquote background cracks
+  const pullquoteBg = document.querySelector('.pullquote-bg');
+  if (pullquoteBg) {
+    const crackIntensity = Math.min(1, Math.max(0, (globalEntropy - 0.3) * 3));
+    if (crackIntensity > 0.01) {
+      const fragments = [];
+      for (let i = 0; i < 5; i++) {
+        const x = 10 + i * 20;
+        const opacity = crackIntensity * (0.1 + Math.random() * 0.1);
+        fragments.push(`linear-gradient(${45 + i * 30}deg, transparent ${x - 1}%, rgba(196,90,45,${opacity}) ${x}%, transparent ${x + 1}%)`);
+      }
+      pullquoteBg.style.background = `${fragments.join(',')}, var(--ink)`;
+    }
+  }
+
+  // Global background shift
+  const bgShift = globalEntropy * globalEntropy;
+  document.body.style.background = `linear-gradient(180deg,
+    hsl(35, ${Math.round(30 - bgShift * 20)}%, ${Math.round(95 - bgShift * 10)}%) 0%,
+    hsl(30, ${Math.round(25 - bgShift * 20)}%, ${Math.round(92 - bgShift * 15)}%) 100%)`;
+
+  // Crack canvas opacity
+  DOM.crackCanvas.style.opacity = Math.min(1, globalEntropy * 2.5);
+
+  // Spawn dust particles at high entropy
+  if (globalEntropy > 0.3 && Math.random() < globalEntropy * 0.3) {
+    spawnDust();
+  }
+}
+
+// ---- CRACK GENERATION ----
+function generateCracks() {
+  cracks = [];
+  const count = 8;
+  for (let i = 0; i < count; i++) {
+    const crack = {
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      segments: [],
+      thresholdEntropy: 0.2 + Math.random() * 0.5,
+    };
+    let cx = crack.x, cy = crack.y;
+    const len = 3 + Math.floor(Math.random() * 6);
+    for (let j = 0; j < len; j++) {
+      const angle = (Math.random() - 0.5) * Math.PI;
+      const dist = 20 + Math.random() * 60;
+      const nx = cx + Math.cos(angle) * dist;
+      const ny = cy + Math.sin(angle) * dist;
+      crack.segments.push({ x1: cx, y1: cy, x2: nx, y2: ny });
+      cx = nx;
+      cy = ny;
+    }
+    cracks.push(crack);
+  }
+}
+
+function drawCracks() {
+  crackCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+  cracks.forEach(crack => {
+    if (globalEntropy < crack.thresholdEntropy) return;
+    const progress = Math.min(1, (globalEntropy - crack.thresholdEntropy) / 0.3);
+
+    crack.segments.forEach((seg, i) => {
+      const segProgress = Math.min(1, Math.max(0, progress * crack.segments.length - i));
+      if (segProgress <= 0) return;
+
+      crackCtx.beginPath();
+      crackCtx.moveTo(seg.x1, seg.y1);
+      crackCtx.lineTo(
+        seg.x1 + (seg.x2 - seg.x1) * segProgress,
+        seg.y1 + (seg.y2 - seg.y1) * segProgress
+      );
+      crackCtx.strokeStyle = `rgba(26,26,26,${0.06 * progress})`;
+      crackCtx.lineWidth = 0.5 + progress * 1;
+      crackCtx.stroke();
+    });
+  });
+}
+
+// ---- DUST PARTICLES ----
+function spawnDust() {
+  const count = Math.floor(1 + globalEntropy * 3);
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: window.innerHeight + 10,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: -0.5 - Math.random() * 1.5,
+      size: 1 + Math.random() * 2.5,
+      life: 1,
+      decay: 0.003 + Math.random() * 0.006,
+      color: Math.random() > 0.5 ? '26,26,26' : '196,90,45',
+    });
+  }
+}
+
+function updateDust() {
+  dustCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy -= 0.003; // slight upward drift
+    p.life -= p.decay;
+
+    dustCtx.beginPath();
+    dustCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    dustCtx.fillStyle = `rgba(${p.color},${p.life * 0.15 * globalEntropy})`;
+    dustCtx.fill();
+  });
+}
+
+// ---- ANIMATION LOOP ----
+function loop() {
+  drawCracks();
+  updateDust();
+  requestAnimationFrame(loop);
+}
+
+// ---- INIT ----
+function init() {
+  resize();
+  splitWords();
+  setupFadeIn();
+  generateCracks();
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', () => {
+    resize();
+    generateCracks();
+  });
+
+  onScroll();
+  loop();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
